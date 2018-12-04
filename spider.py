@@ -19,10 +19,6 @@ class Tumblr(object):
 			content = self.__request_likes(self.__page)
 			frams = self.__get_frame_url(content)
 			for fram in frams:
-				target_image_urls = self.__get_image_url(fram)
-				for image_url in target_image_urls:
-					self.__download_image(image_url)
-			for fram in frams:
 				target_video_urls = self.__get_video_url(fram)
 				for video_url in target_video_urls:
 					self.__download_video(video_url)
@@ -53,14 +49,6 @@ class Tumblr(object):
 		result = pattern.findall(content)
 		print('Find video URL = %s' % result)
 		return result
-	
-	def __get_image_url(self, url_):
-		reg = r'((?<=<source src=").*(?=" type="image/jpg"))'
-		pattern = re.compile(reg)
-		content = self.__do_request(url_)
-		result = pattern.findall(content)
-		print('Find image URL = %s' % result)
-		return result
 
 	def __download_video(self, url_):
 		pattern = re.compile(r'([^/]+$)')
@@ -72,18 +60,9 @@ class Tumblr(object):
 		except Exception as e:
 			print(e)
 
-	def __download_image(self, url_):
-		pattern = re.compile(r'([^/]+$)')
-		file_name = pattern.findall(url_)[0]
-		dir_ = self.__root_dir + file_name + '.jpg'
-		try:
-			print('Download: %s ' % url_)
-			self.urlretrieve = urllib.request.urlretrieve(url_, dir_)
-		except Exception as e:
-			print(e)
 
 #url => https://xxx.tumblr.com/page/{} 
 #page => from 0
 #
-ins = Tumblr('https://Guanse.tumblr.com/page/{}', 0)
+ins = Tumblr('https://1024studio.tumblr.com/page/{}', 7)
 ins.launch()
