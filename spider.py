@@ -49,7 +49,7 @@ class Tumblr(object):
         print('Find results = %s' % len(results))
         return results
 
-    def __get_images(self, content, suffix='jpg'):
+    def __get_images(self, content, suffix=['jpg','gif','png']):
         # content = self.__do_request(url_)
         parser = etree.HTMLParser(encoding='UTF-8', recover=True)
         tree = etree.parse(StringIO(content), parser)
@@ -61,9 +61,10 @@ class Tumblr(object):
                 real_url = urljoin(self.url_root, path)
                 content_post = self.__do_request(real_url)
                 tree = etree.parse(StringIO(content_post), parser)
-                image_links = tree.xpath("//a[substring(@href, string-length(@href)-3)='.{}']/@href".format(suffix))
-                for image_link in image_links:
-                    self.__download_image(image_link, )
+                for suf in suffix:
+                    image_links = tree.xpath("//a[substring(@href, string-length(@href)-3)='.{}']/@href".format(suf))
+                    for image_link in image_links:
+                        self.__download_image(image_link, )
 
     def __get_video_url(self, url_):
         reg = r'((?<=<source src=").*(?=" type="video/mp4"))'
